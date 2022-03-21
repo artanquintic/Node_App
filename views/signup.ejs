@@ -1,0 +1,88 @@
+<%- include('partials/header') %>
+
+<div class="container mt-5">
+  <h1>Sign Up</h1>
+
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="card">
+        <div class="card-body">
+          <!-- Makes POST request to /register route -->
+          <form action="/signup" method="POST">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" class="form-control" name="firstName" required />
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" class="form-control" name="lastName" required />
+            </div>
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="username" class="form-control" name="username" required />
+              <div class="username error" role="alert"></div>
+            </div>
+            <!-- <div class="form-group">
+              <label for="username">username</label>
+              <input type="username" class="form-control" name="username" required />
+            </div> -->
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" name="password" required />
+              <div class="password error" role="alert"></div>
+            </div>
+            <button type="submit" class="btn btn-dark my-2">Sign Up</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="col-sm-4">
+      <div class="card social-block">
+        <div class="card-body">
+          <a class="btn btn-block" href="/auth/google" role="button">
+            <i class="fab fa-google"></i>
+            Sign Up with Google
+          </a>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>
+
+<%- include('partials/footer') %>
+
+<script>
+  const form = document.querySelector("form");
+  const usernameError = document.querySelector(".username.error");
+  const passwordError = document.querySelector(".password.error");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    // reset errors
+    usernameError.textContent = "";
+    passwordError.textContent = "";
+    // get values
+    const firstName = form.firstName.value;
+    const lastName = form.lastName.value;
+    const username = form.username.value;
+    const password = form.password.value;
+    try {
+      const res = await fetch("/signup", {
+        method: "POST",
+        body: JSON.stringify({ firstName, lastName, username, password }),
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await res.json();
+      console.log(data);
+      if (data.errors) {
+        usernameError.textContent = data.errors.username;
+        passwordError.textContent = data.errors.password;
+      }
+      if (data.user) {
+        location.assign("/feed");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  });
+</script>
