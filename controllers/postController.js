@@ -1,8 +1,9 @@
-import express from "express";
 import mongoose from "mongoose";
 import slugify from "slugify";
 import Post from "../models/post.js";
-// const router = express.Router();
+import Comment from "../models/comment.js";
+import User from "../models/user.js";
+
 const makeSlug = (title) => {
   // Slugify config options
   const options = {
@@ -35,15 +36,17 @@ export const posts_new_get = async (req, res) => {
 export const posts_new_post = async (req, res) => {
   const { postTitle, postContent } = req.body;
   const slug = makeSlug(postTitle);
+  const currentUser = res.locals.user;
 
   try {
     const post = await Post.create({
       title: postTitle,
       content: postContent,
+      author: currentUser,
       slug: slug,
     });
 
-    res.status(201).json({ post: post._id });
+    res.redirect(`/posts/${slug}/${post._id}`);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -53,8 +56,17 @@ export const posts_get = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const post = await Post.findById({ _id: id });
-    res.render("post", { post: post });
+    const post = await Post.find({ _id: id })
+      .populate({
+        path: "comments",
+        model: "Comment",
+        populate: {
+          path: "user",
+          model: "User",
+        },
+      })
+      .exec();
+    res.render("post", { post: post[0] });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -82,7 +94,7 @@ export const posts_edit_patch = async (req, res) => {
 
     await Post.findByIdAndUpdate(id, updatedPost, { new: true });
 
-    res.redirect("/posts/" + slug + "/" + id);
+    res.redirect(`/posts/${slug}/${id}`);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -103,5 +115,42 @@ export const posts_delete = async (req, res) => {
 };
 
 export const posts_like = async (req, res) => {
-  res.render("/posts");
+  const { id, slug } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
+
+  const post = await Post.findById(id);
+  const updatedPost = await Post.findByIdAndUpdate(id, { likeCount: post.likeCount + 1 }, { new: true });
+
+  res.redirect(req.get("referer"));
+};
+
+export const posts_comment = async (req, res) => {
+  const { id } = req.params;
+  const { postComment } = req.body;
+  const currentUser = res.locals.user;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
+
+  const post = await Post.findById(id);
+  const comment = await Comment.create({
+    comment: postComment,
+    post: id,
+    user: currentUser._id,
+  });
+
+  const updatedPost = await Post.findByIdAndUpdate(id, { $push: { comments: comment } }, { new: true });
+
+  res.redirect(req.get("referer"));
+};
+
+export const posts_user_get = async (req, res) => {
+  try {
+    const currentUserId = res.locals.user._id;
+    const posts = await Post.find({ author: currentUserId });
+    console.log(posts);
+    res.render("posts", { posts: posts });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
 };

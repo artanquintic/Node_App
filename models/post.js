@@ -3,7 +3,10 @@ import mongoose from "mongoose";
 const postSchema = mongoose.Schema({
   title: String,
   content: String,
-  creator: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  author: {
+    _id: { type: [mongoose.Schema.Types.ObjectId], ref: "User" },
+    username: { type: String, ref: "User" },
+  },
   tags: [String],
   likeCount: {
     type: Number,
@@ -18,6 +21,12 @@ const postSchema = mongoose.Schema({
     default: new Date(),
   },
   slug: String,
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+    },
+  ],
 });
 
 const Post = new mongoose.model("Post", postSchema);

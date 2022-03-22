@@ -1,16 +1,48 @@
 <%- include("partials/header"); -%>
 
-<h1>Post</h1>
-
-<h2><%= post.title %></h2>
-<p><%= post.content %></h2>
-<div>
-  <a class="btn btn-success" href="/posts">Back to posts</a>
+<div class="d-flex">
+  <div class="flex-grow-1">
+    <a class="btn btn-dark" href="/posts">Back to posts</a>
+  </div>
+  <% if (post.author._id.toString() === user._id.toString()) { %>
+  <a class="btn btn-outline-primary me-2" href="/posts/<%= post.slug%>/<%= post._id%>/edit">Edit</a>
   <form method="POST" action="/posts/<%= post.slug%>/<%= post._id%>">
-    <input type="hidden" name="_method" value="DELETE">
-    <button class="btn btn-danger" type="submit">Delete</button>
+    <input type="hidden" name="_method" value="DELETE" />
+    <button class="btn btn-outline-danger" type="submit">Delete</button>
   </form>
+  <% } %>
 </div>
 
+<div class="post text-center">
+  <h1><%= post.title %></h1>
+  <p>By: <%= post.author.username %> &bull; <%= moment(post.createdAt).format('MMMM d, yyyy h:mm A') %></p>
+  <div class="post-content">
+    <p><%= post.content %></p>
+  </div>
+  <!-- <p>likes: <%= post.likeCount %></p>
+  <form method="POST" action="/posts/<%= post.slug%>/<%= post._id%>/like">
+    <input type="hidden" name="_method" value="PATCH" />
+    <button class="btn btn-success" type="submit">Like</button>
+  </form> -->
+</div>
+
+<div>
+  <% post.comments.forEach(comment => { %>
+  <hr />
+  <div class="d-flex flex-row my-2">
+    <span class="mr-2"><%= comment.user.username %></span>
+    <span class="ml-2">&bull; <%= moment(comment.createdAt).fromNow(); %></span>
+  </div>
+  <span><%= comment.comment %></span>
+  <% }) %>
+  <hr />
+</div>
+
+<form class="" action="/posts/<%= post.slug%>/<%= post._id%>/comment" method="post">
+  <div class="d-flex flex-row mt-4 mb-4">
+    <input type="text" class="form-control mr-3 comments-area" placeholder="Add comment" name="postComment" />
+    <button class="btn btn-primary" type="submit" name="button">Comment</button>
+  </div>
+</form>
 
 <%- include("partials/footer"); -%>
