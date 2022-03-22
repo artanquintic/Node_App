@@ -1,0 +1,59 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Open Sans", sans-serif;
+}
+
+.main-content {
+  padding: 4em 8em;
+}
+
+.page-title {
+  margin-bottom: 1.5em;
+  font-family: "Raleway", sans-serif;
+  font-size: 3em;
+  font-weight: 600;
+  text-align: center;
+}
+
+.post-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.post-list > div {
+  flex: 50%;
+}
+
+.preview {
+  margin: 1em;
+  max-width: 35rem;
+  max-height: 30rem;
+}
+
+.card-img-top {
+  height: 10rem;
+  width: auto;
+}
+
+.post-content {
+  padding: 2em 6em;
+  min-height: 40vh;
+}
+
+.form-control {
+  margin: 0.5rem 0;
+}
+
+.comments-area {
+  width: 50%;
+}
+
+.commented-user {
+  margin: 1em 0;
+}

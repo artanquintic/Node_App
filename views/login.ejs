@@ -7,7 +7,6 @@
     <div class="col-sm-8">
       <div class="card">
         <div class="card-body">
-          <!-- Makes POST request to /login route -->
           <form action="/login" method="POST">
             <div class="form-group">
               <label for="username">Username</label>
@@ -50,11 +49,12 @@
         headers: { "Content-Type": "application/json" },
       });
       const data = await res.json();
-      console.log("data: " + data);
+
       if (data.errors) {
         usernameError.textContent = data.errors.username;
         passwordError.textContent = data.errors.password;
       }
+
       if (data.user) {
         location.assign("/posts");
       }
