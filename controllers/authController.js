@@ -40,11 +40,11 @@ const createToken = (id, username) => {
 };
 
 export const signup_get = (req, res) => {
-  res.render("signup", { message: null });
+  res.render("signup");
 };
 
 export const login_get = (req, res) => {
-  res.render("login", { message: null });
+  res.render("login");
 };
 
 export const signup_post = async (req, res) => {
@@ -71,7 +71,6 @@ export const login_post = async (req, res) => {
   // Our login logic starts here
   // Get user input
   const { username, password } = req.body;
-  console.log(username, password);
 
   try {
     // Validate if user exist in our database
