@@ -9,7 +9,6 @@ import {
   posts_delete,
   posts_like,
   posts_comment,
-  posts_user_get,
 } from "../controllers/postController.js";
 
 const router = Router();
