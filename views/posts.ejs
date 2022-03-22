@@ -1,0 +1,18 @@
+<%- include('partials/header') %>
+
+<h1>Posts page</h1>
+
+<% posts.forEach(post => { %>
+  <h2><%= post.title %> </h2>
+  <p><%= post.content %> </h2>
+  <div>
+    <a class="btn btn-success" href="/posts/<%= post.slug%>/<%= post._id%>">Read More</a>
+    <a class="btn btn-warning" href="/posts/<%= post.slug%>/<%= post._id%>/edit">Edit</a>
+    <form method="POST" action="/posts/<%= post.slug%>/<%= post._id%>">
+      <input type="hidden" name="_method" value="DELETE">
+      <button class="btn btn-danger" type="submit">Delete</button>
+    </form>
+  </div>
+<% }) %> 
+
+<%- include('partials/footer') %>

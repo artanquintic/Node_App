@@ -79,7 +79,7 @@
         passwordError.textContent = data.errors.password;
       }
       if (data.user) {
-        location.assign("/feed");
+        location.assign("/posts");
       }
     } catch (err) {
       console.log(err);
