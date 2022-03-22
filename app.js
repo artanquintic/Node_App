@@ -1,17 +1,12 @@
-//jshint esversion:6
 import dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
 import mongoose from "mongoose";
-import https from "https";
-import fs from "fs";
-import ejs from "ejs";
 import _ from "lodash";
 import cookieParser from "cookie-parser";
-// import { fileURLToPath } from "url";
-// import path, { dirname } from "path";
 import methodOverride from "method-override";
+import moment from "moment";
 
 import authRoutes from "./routes/authRoutes.js";
 import { requireAuth, checkUser } from "./middleware/authMiddleware.js";
@@ -25,16 +20,16 @@ app.use(cookieParser());
 app.use(
   methodOverride(function (req, res) {
     if (req.body && typeof req.body === "object" && "_method" in req.body) {
-      // look in urlencoded POST bodies and delete it
       var method = req.body._method;
       delete req.body._method;
       return method;
     }
   })
 );
-
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
+app.use((req, res, next) => {
+  res.locals.moment = moment;
+  next();
+});
 
 app.set("view engine", "ejs");
 
@@ -42,9 +37,10 @@ mongoose.connect("mongodb://localhost:27017/growsariDB", { useNewUrlParser: true
 
 // routes
 app.get("*", checkUser);
+app.post("*", checkUser);
 app.get("/", (req, res) => res.render("home"));
-app.get("/feed", requireAuth, (req, res) => res.render("feed"));
 app.use(authRoutes);
+app.use("/posts", requireAuth);
 app.use(postRoutes);
 
 // https

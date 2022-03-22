@@ -23,10 +23,7 @@ const handleErrors = (err) => {
 
   // validation errors
   if (err.message.includes("user validation failed")) {
-    // console.log(err);
     Object.values(err.errors).forEach(({ properties }) => {
-      // console.log(val);
-      // console.log(properties);
       errors[properties.path] = properties.message;
     });
   }
@@ -40,10 +37,12 @@ const createToken = (id, username) => {
 };
 
 export const signup_get = (req, res) => {
+  if (res.locals.user) return res.redirect("/posts");
   res.render("signup");
 };
 
 export const login_get = (req, res) => {
+  if (res.locals.user) return res.redirect("/posts");
   res.render("login");
 };
 
@@ -68,8 +67,6 @@ export const signup_post = async (req, res) => {
 };
 
 export const login_post = async (req, res) => {
-  // Our login logic starts here
-  // Get user input
   const { username, password } = req.body;
 
   try {

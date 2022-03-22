@@ -36,6 +36,10 @@ userSchema.statics.login = async function (username, password) {
   throw Error("incorrect username");
 };
 
+userSchema.virtual("fullName").get(function () {
+  return `${this.firstName} ${this.lastName}`;
+});
+
 const Post = new mongoose.model("User", userSchema);
 
 export default Post;
