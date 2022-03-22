@@ -143,14 +143,3 @@ export const posts_comment = async (req, res) => {
 
   res.redirect(req.get("referer"));
 };
-
-export const posts_user_get = async (req, res) => {
-  try {
-    const currentUserId = res.locals.user._id;
-    const posts = await Post.find({ author: currentUserId });
-    console.log(posts);
-    res.render("posts", { posts: posts });
-  } catch (error) {
-    res.status(404).json({ message: error.message });
-  }
-};
