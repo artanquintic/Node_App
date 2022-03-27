@@ -8,13 +8,27 @@
 
 ### How to run
 
-- npm install
-- npm run dev
+## Install packages
 
-### Things that I would like to add if given more time
+```shell
+npm install
+```
 
-- Image upload for preview
-- Implement tests
-- Integrate third-party API
-- Dockerize
-- Better UI
+## Seed
+
+```shell
+node bin/seed.js
+```
+
+Credentials:
+
+```shell
+username: testuser
+password: password
+```
+
+## Run app
+
+```shell
+npm run dev
+```
