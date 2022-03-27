@@ -46,10 +46,6 @@ body {
   min-height: 40vh;
 }
 
-.form-control {
-  margin: 0.5rem 0;
-}
-
 .comments-area {
   width: 50%;
 }

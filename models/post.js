@@ -7,8 +7,18 @@ const postSchema = mongoose.Schema({
     _id: { type: [mongoose.Schema.Types.ObjectId], ref: "User" },
     username: { type: String, ref: "User" },
   },
+  category: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
+  ],
   tags: [String],
   likeCount: {
+    type: Number,
+    default: 0,
+  },
+  viewCount: {
     type: Number,
     default: 0,
   },
@@ -20,13 +30,13 @@ const postSchema = mongoose.Schema({
     type: Date,
     default: new Date(),
   },
-  slug: String,
   comments: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Comment",
     },
   ],
+  slug: String,
 });
 
 const Post = new mongoose.model("Post", postSchema);

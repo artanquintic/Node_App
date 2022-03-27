@@ -10,12 +10,21 @@
     <input type="hidden" name="_method" value="DELETE" />
     <button class="btn btn-outline-danger" type="submit">Delete</button>
   </form>
+  <% } else { %>
+    <a
+    class="me-2 btn <%= user.bookmark.includes(post.id) ? "btn-success" : "btn-outline-success"%>"
+    href="/posts/<%= post.slug%>/<%= post._id%>/bookmark"
+    >Bookmark</a>
   <% } %>
+   
 </div>
 
 <div class="post text-center">
-  <h1><%= post.title %></h1>
-  <p>By: <%= post.author.username %> &bull; <%= moment(post.createdAt).format('MMMM d, yyyy h:mm A') %></p>
+  <div class="post-details">
+    <h1><%= post.title %></h1>
+    <p>By: <%= post.author.username %> &bull; <%= moment(post.createdAt).format('MMMM D, yyyy h:mm A') %></p>
+    <p><% post.category.forEach(category => { %> <%= category.name %> <% }) %></p>
+  </div>
   <div class="post-content">
     <p><%= post.content %></p>
   </div>

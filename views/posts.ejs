@@ -13,7 +13,7 @@
       </div>
       <h5 class="card-title"><%= post.title %></h5>
       <h6 class="card-subtitle mb-2 text-muted">By: <%= post.author.username %></h6>
-      <p class="card-text"><%= post.content %></p>
+      <p class="card-text"><%= truncate(post.content, 30) %>...</p>
       <a class="card-link btn btn-outline-dark" href="/posts/<%= post.slug%>/<%= post._id%>">Read More</a>
     </div>
   </div>

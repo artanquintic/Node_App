@@ -22,7 +22,7 @@ const requireAuth = (req, res, next) => {
 
 // check current user
 const checkUser = (req, res, next) => {
-  const token = req.cookies.jwt;
+  const token = req.cookies.jwt || null;
   if (token) {
     jwt.verify(token, config.TOKEN_KEY, async (err, decodedToken) => {
       if (err) {

@@ -9,6 +9,7 @@ import {
   posts_delete,
   posts_like,
   posts_comment,
+  posts_bookmark,
 } from "../controllers/postController.js";
 
 const router = Router();
@@ -22,5 +23,6 @@ router.patch("/posts/:slug/:id/edit", posts_edit_patch);
 router.delete("/posts/:slug/:id", posts_delete);
 router.patch("/posts/:slug/:id/like", posts_like);
 router.post("/posts/:slug/:id/comment", posts_comment);
+router.get("/posts/:slug/:id/bookmark", posts_bookmark);
 
 export default router;

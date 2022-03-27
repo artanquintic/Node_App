@@ -3,12 +3,12 @@ import slugify from "slugify";
 import Post from "../models/post.js";
 import Comment from "../models/comment.js";
 import User from "../models/user.js";
+import Category from "../models/category.js";
 
 const makeSlug = (title) => {
   // Slugify config options
   const options = {
-    replacement: "-",
-    remove: undefined,
+    replace: /[*+~.()'"!:@]/g,
     lower: true,
     strict: false,
     locale: "en",
@@ -20,29 +20,40 @@ const makeSlug = (title) => {
   return slug;
 };
 
+function truncate(str, num) {
+  return str.split(" ").splice(0, num).join(" ");
+}
+
 export const posts_getAll = async (req, res) => {
   try {
     const posts = await Post.find();
-    res.render("posts", { posts: posts });
+    res.render("posts", { posts: posts, truncate: truncate });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
 
 export const posts_new_get = async (req, res) => {
-  res.render("newPost");
+  try {
+    const categories = await Category.find();
+    res.render("newPost", { categories: categories });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
 };
 
 export const posts_new_post = async (req, res) => {
-  const { postTitle, postContent } = req.body;
+  const { postTitle, postContent, postCategory } = req.body;
   const slug = makeSlug(postTitle);
   const currentUser = res.locals.user;
 
   try {
+    console.log(postCategory);
     const post = await Post.create({
       title: postTitle,
       content: postContent,
       author: currentUser,
+      category: [postCategory],
       slug: slug,
     });
 
@@ -56,17 +67,18 @@ export const posts_get = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const post = await Post.find({ _id: id })
+    const post = await Post.findById(id)
       .populate({
         path: "comments",
-        model: "Comment",
         populate: {
           path: "user",
-          model: "User",
+          select: "username",
         },
       })
+      .populate("author")
+      .populate("category")
       .exec();
-    res.render("post", { post: post[0] });
+    res.render("post", { post: post });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -76,8 +88,9 @@ export const posts_edit_get = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const post = await Post.findById({ _id: id });
-    res.render("editPost", { post: post });
+    const categories = await Category.find();
+    const post = await Post.findById(id).populate("category").exec();
+    res.render("editPost", { post: post, categories: categories });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -85,12 +98,12 @@ export const posts_edit_get = async (req, res) => {
 
 export const posts_edit_patch = async (req, res) => {
   const { id, slug } = req.params;
-  const { postTitle, postContent } = req.body;
+  const { postTitle, postContent, postCategory } = req.body;
 
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
 
-    const updatedPost = { title: postTitle, content: postContent, _id: id };
+    const updatedPost = { title: postTitle, content: postContent, category: postCategory };
 
     await Post.findByIdAndUpdate(id, updatedPost, { new: true });
 
@@ -106,7 +119,7 @@ export const posts_delete = async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
 
-    await Post.findByIdAndRemove({ _id: id });
+    await Post.findByIdAndRemove(id);
 
     res.redirect("/posts");
   } catch (error) {
@@ -115,12 +128,12 @@ export const posts_delete = async (req, res) => {
 };
 
 export const posts_like = async (req, res) => {
-  const { id, slug } = req.params;
+  const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
 
   const post = await Post.findById(id);
-  const updatedPost = await Post.findByIdAndUpdate(id, { likeCount: post.likeCount + 1 }, { new: true });
+  await Post.findByIdAndUpdate(id, { likeCount: post.likeCount + 1 }, { new: true });
 
   res.redirect(req.get("referer"));
 };
@@ -139,7 +152,29 @@ export const posts_comment = async (req, res) => {
     user: currentUser._id,
   });
 
-  const updatedPost = await Post.findByIdAndUpdate(id, { $push: { comments: comment } }, { new: true });
+  await Post.findByIdAndUpdate(id, { $push: { comments: comment } }, { new: true });
+
+  res.redirect(req.get("referer"));
+};
+
+export const posts_bookmark = async (req, res) => {
+  const { id } = req.params;
+  const currentUser = res.locals.user;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
+
+  User.findOne({
+    _id: currentUser.id,
+    bookmark: {
+      _id: id,
+    },
+  }).then(async (exists) => {
+    if (exists) {
+      await User.findByIdAndUpdate(currentUser.id, { $pull: { bookmark: id } }, { new: true });
+    } else {
+      await User.findByIdAndUpdate(currentUser.id, { $push: { bookmark: id } }, { new: true });
+    }
+  });
 
   res.redirect(req.get("referer"));
 };

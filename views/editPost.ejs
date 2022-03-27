@@ -3,11 +3,25 @@
 <h1>Edit Post</h1>
 <form class="" action="/posts/<%= post.slug%>/<%= post._id%>/edit" method="post">
   <input type="hidden" name="_method" value="PATCH" />
-  <div class="form-group">
-    <label>Title</label>
-    <input class="form-control" type="text" name="postTitle" value="<%= post.title %>" required />
-    <label>Post</label>
-    <textarea class="form-control" name="postContent" rows="5" cols="30" required><%= post.content %></textarea>
+  <div class="mb-3">
+    <label for="postTitle" class="form-label">Title</label>
+    <input class="form-control" id="postTitle" type="text" name="postTitle" value="<%= post.title %>" required />
+  </div>
+  <div class="mb-3">
+    <label for="postCategory" class="form-label">Category</label>
+    <select class="form-select" id="postCategory" name="postCategory" aria-label="Post category" required>
+      <option>Select category</option>
+      <% categories.forEach(category => { %>
+      <option value="<%= category.id %>" 
+        <%= category.id === post.category[0].id ? "selected" : "" %>>
+        <%= category.name %>
+      </option>
+      <% }) %>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="content" class="form-label">Post</label>
+    <textarea class="form-control" id="content" name="postContent" rows="5" cols="30" required><%= post.content %></textarea>
   </div>
   <button class="btn btn-secondary m-2" onclick="history.back(-1)">Back</button>
   <button class="btn btn-primary m-2" type="submit" name="button">Update post</button>
