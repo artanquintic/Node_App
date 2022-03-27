@@ -20,15 +20,15 @@ npm install
 node bin/seed.js
 ```
 
+## Run app
+
+```shell
+npm run dev
+```
+
 Credentials:
 
 ```shell
 username: testuser
 password: password
-```
-
-## Run app
-
-```shell
-npm run dev
 ```
