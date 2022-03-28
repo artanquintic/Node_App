@@ -14,7 +14,7 @@
     <a
     class="me-2 btn <%= user.bookmark.includes(post.id) ? "btn-success" : "btn-outline-success"%>"
     href="/posts/<%= post.slug%>/<%= post._id%>/bookmark"
-    >Bookmark</a>
+    ><%= user.bookmark.includes(post.id) ? "Bookmarked" : "Bookmark"%></a>
   <% } %>
    
 </div>
@@ -22,17 +22,12 @@
 <div class="post text-center">
   <div class="post-details">
     <h1><%= post.title %></h1>
-    <p>By: <%= post.author.username %> &bull; <%= moment(post.createdAt).format('MMMM D, yyyy h:mm A') %></p>
+    <p>By: <%= post.author.username %>  &bull; <%= moment(post.createdAt).format('MMMM D, yyyy h:mm A') %></p>
     <p><% post.category.forEach(category => { %> <%= category.name %> <% }) %></p>
   </div>
   <div class="post-content">
     <p><%= post.content %></p>
   </div>
-  <!-- <p>likes: <%= post.likeCount %></p>
-  <form method="POST" action="/posts/<%= post.slug%>/<%= post._id%>/like">
-    <input type="hidden" name="_method" value="PATCH" />
-    <button class="btn btn-success" type="submit">Like</button>
-  </form> -->
 </div>
 
 <div>

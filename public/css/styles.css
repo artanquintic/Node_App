@@ -30,15 +30,17 @@ body {
   flex: 50%;
 }
 
-.preview {
+.card-preview {
   margin: 1em;
   max-width: 35rem;
-  max-height: 30rem;
+  max-height: 40rem;
+  border-radius: 1em;
 }
 
 .card-img-top {
-  height: 10rem;
-  width: auto;
+  border-radius: 1em 1em 0 0;
+  max-height: 15rem;
+  object-fit: cover;
 }
 
 .post-content {

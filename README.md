@@ -5,22 +5,29 @@
 - User model
 - CRUD functionalities
 - JWT authentication
+- Third-party API integration (NewsAPI)
 
-### How to run
+### Things that I would like to add if given more time:
 
-## Install packages
+- Tests
+- Fix error messages
+- Refactor code
+
+## How to run
+
+### Install packages
 
 ```shell
 npm install
 ```
 
-## Seed
+### Seed
 
 ```shell
 node bin/seed.js
 ```
 
-## Run app
+### Run app
 
 ```shell
 npm run dev

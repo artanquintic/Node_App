@@ -14,7 +14,6 @@ const makeSlug = (title) => {
     locale: "en",
     trim: true,
   };
-
   const slug = slugify(title, options);
 
   return slug;
@@ -24,10 +23,31 @@ function truncate(str, num) {
   return str.split(" ").splice(0, num).join(" ");
 }
 
+export const posts_currentUser_get = async (req, res) => {
+  try {
+    const currentUser = res.locals.user;
+    const posts = await Post.find({ "author._id": currentUser._id });
+    res.render("posts", { posts: posts, truncate: truncate, title: "My Posts" });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const posts_currentUser_bookmarks_get = async (req, res) => {
+  try {
+    const currentUser = res.locals.user;
+    const bookmarks = await User.findById(currentUser._id, "bookmark").populate("bookmark").exec();
+    res.render("posts", { posts: bookmarks.bookmark, truncate: truncate, title: "My Bookmarks" });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
 export const posts_getAll = async (req, res) => {
   try {
-    const posts = await Post.find();
-    res.render("posts", { posts: posts, truncate: truncate });
+    const currentUser = res.locals.user;
+    const posts = await Post.find().populate("category");
+    res.render("posts", { posts: posts, truncate: truncate, title: `Welcome, ${currentUser.firstName}!` });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -48,7 +68,6 @@ export const posts_new_post = async (req, res) => {
   const currentUser = res.locals.user;
 
   try {
-    console.log(postCategory);
     const post = await Post.create({
       title: postTitle,
       content: postContent,

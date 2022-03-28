@@ -1,0 +1,14 @@
+<%- include("partials/header"); -%>
+<div class="d-flex">
+  <div class="flex-grow-1">
+    <a class="btn btn-dark" href="/posts">Back to posts</a>
+  </div>
+  <a class="btn btn-primary me-2" href="/profile/edit" name="button">Edit Profile</a>
+</div>
+<div class="text-center">
+  <h1><%= user.fullname %></h1>
+  <p>Username: <%= user.username %></p>
+  <h5>Bio: <%= user.profile.bio %></h5>
+</div>
+
+<%- include("partials/footer"); -%>

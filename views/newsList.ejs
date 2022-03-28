@@ -1,0 +1,19 @@
+<%- include('partials/header') %>
+
+<h1 class="page-title d-flex justify-content-center">News Headlines</h1>
+<div class="post-list text-center">
+  <% if (articles) { %> <% articles.forEach(article => { %>
+  <div class="card card-preview">
+    <img class="card-img-top img-fluid" src="<%= article.urlToImage %>" alt="<%= article.title %>" />
+    <div class="card-body">
+      <h5 class="card-title my-2"><%= article.title %></h5>
+      <h6 class="card-subtitle mb-2 text-muted">
+        By: <%= article.author %> &bull; <%= moment(article.publishedAt).format('MMMM D, yyyy') %>
+      </h6>
+      <p class="card-text"><%= article.description %></p>
+    </div>
+  </div>
+  <% }) %> <% } %>
+</div>
+
+<%- include('partials/footer') %>

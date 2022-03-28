@@ -49,14 +49,9 @@ userSchema.statics.login = async function (username, password) {
   throw Error("incorrect username");
 };
 
-userSchema.virtual("fullName").get(function () {
+userSchema.virtual("fullname").get(function () {
   return `${this.firstName} ${this.lastName}`;
 });
-
-// userSchema.path("profileImg").validate((val) => {
-//   urlRegex = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/;
-//   return urlRegex.test(val);
-// }, "Invalid URL.");
 
 const User = new mongoose.model("User", userSchema);
 

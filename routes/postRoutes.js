@@ -3,6 +3,8 @@ import {
   posts_getAll,
   posts_new_get,
   posts_new_post,
+  posts_currentUser_get,
+  posts_currentUser_bookmarks_get,
   posts_get,
   posts_edit_get,
   posts_edit_patch,
@@ -17,6 +19,8 @@ const router = Router();
 router.get("/posts/", posts_getAll);
 router.get("/posts/new", posts_new_get);
 router.post("/posts/new", posts_new_post);
+router.get("/posts/my-posts", posts_currentUser_get);
+router.get("/posts/my-bookmarks", posts_currentUser_bookmarks_get);
 router.get("/posts/:slug/:id", posts_get);
 router.get("/posts/:slug/:id/edit", posts_edit_get);
 router.patch("/posts/:slug/:id/edit", posts_edit_patch);

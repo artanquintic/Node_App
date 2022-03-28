@@ -1,0 +1,26 @@
+<%- include("partials/header"); -%>
+
+<h1>User Profile</h1>
+<form class="" action="/profile/edit" method="post">
+  <input type="hidden" name="_method" value="PATCH" />
+  <div class="row">
+    <div class="col mb-3">
+      <label for="firstName" class="form-label">First Name</label>
+      <input class="form-control" id="firstName" type="text" name="firstName" value="<%= user.firstName %>" required />
+    </div>
+    <div class="col mb-3">
+      <label for="lastName" class="form-label">Last Name</label>
+      <input class="form-control" id="lastName" type="text" name="lastName" value="<%= user.lastName %>" required />
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="profileBio" class="form-label">Bio</label>
+    <textarea class="form-control" id="profileBio" name="profileBio" rows="5" cols="30">
+<%= user.profile.bio %></textarea
+    >
+  </div>
+  <button class="btn btn-secondary m-2" onclick="history.back(-1)">Back</button>
+  <button class="btn btn-primary m-2" type="submit" name="button">Save</button>
+</form>
+<%- include("partials/footer"); -%>

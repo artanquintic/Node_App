@@ -1,18 +1,22 @@
 <%- include('partials/header') %>
 
-<h1 class="page-title d-flex justify-content-center">Welcome, <%= user.firstName %>!</h1>
-<div class="text-center m-5">
-  <a class="btn btn-dark" href="/posts/new">Create Post</a>
-</div>
+<h1 class="page-title d-flex justify-content-center"><%= title %></h1>
 <div class="post-list text-center">
   <% if (posts) { %> <% posts.forEach(post => { %>
-  <div class="card preview">
+  <div class="card card-preview">
+    <img
+      class="card-img-top img-fluid"
+      src="https://imgholder.ru/600x300/8493a8/adb9ca&text=IMAGE+HOLDER&font=kelson"
+      alt="Card image cap"
+    />
     <div class="card-body">
-      <div>
-        <img class="card-img-top" src="/images/image-holder-icon.png" alt="Card image cap" />
-      </div>
-      <h5 class="card-title"><%= post.title %></h5>
-      <h6 class="card-subtitle mb-2 text-muted">By: <%= post.author.username %></h6>
+      <h5 class="card-title my-2"><%= post.title %></h5>
+      <h6 class="card-subtitle mb-2 text-muted">
+        By: <%= post.author.username %> &bull; <%= moment(post.createdAt).format('MMMM D, yyyy') %>
+      </h6>
+      <h6 class="card-subtitle mb-2 text-muted">
+        Category: <% post.category.forEach(category => { %> <%= category.name %> <% }) %>
+      </h6>
       <p class="card-text"><%= truncate(post.content, 30) %>...</p>
       <a class="card-link btn btn-outline-dark" href="/posts/<%= post.slug%>/<%= post._id%>">Read More</a>
     </div>

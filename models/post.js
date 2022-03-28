@@ -13,7 +13,6 @@ const postSchema = mongoose.Schema({
       ref: "Category",
     },
   ],
-  tags: [String],
   likeCount: {
     type: Number,
     default: 0,
@@ -36,6 +35,10 @@ const postSchema = mongoose.Schema({
       ref: "Comment",
     },
   ],
+  banner: {
+    image: String,
+    videoURL: String,
+  },
   slug: String,
 });
 

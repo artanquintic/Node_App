@@ -8,9 +8,11 @@ import cookieParser from "cookie-parser";
 import methodOverride from "method-override";
 import moment from "moment";
 
-import authRoutes from "./routes/authRoutes.js";
 import { requireAuth, checkUser } from "./middleware/authMiddleware.js";
+import authRoutes from "./routes/authRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import newsRoutes from "./routes/newsRoutes.js";
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -36,23 +38,18 @@ app.set("view engine", "ejs");
 mongoose.connect("mongodb://localhost:27017/growsariDB", { useNewUrlParser: true });
 
 // routes
-app.get("*", checkUser);
-app.post("*", checkUser);
-app.get("/", (req, res) => res.render("home"));
+app.use("*", checkUser);
+app.get("/", (req, res) => {
+  if (res.locals.user) return res.redirect("/posts");
+  res.render("home");
+});
 app.use(authRoutes);
 app.use("/posts", requireAuth);
 app.use(postRoutes);
+app.use("/profile", requireAuth);
+app.use(userRoutes);
+app.use(newsRoutes);
 
-// https
-//   .createServer(
-//     // Provide the private and public key to the server by reading each
-//     // file's content with the readFileSync() method.
-//     {
-//       key: fs.readFileSync("./certificates/key.pem"),
-//       cert: fs.readFileSync("./certificates/cert.pem"),
-//     },
-//     app
-//   )
 app.listen(3000, () => {
   console.log("Server started on port 3000");
 });
