@@ -5,7 +5,6 @@ import slugify from "slugify";
 import User from "../models/user.js";
 import Post from "../models/post.js";
 import Category from "../models/category.js";
-import Tag from "../models/tag.js";
 
 // connect to MongoDB
 mongoose.connect("mongodb://localhost:27017/growsariDB", { useNewUrlParser: true });
@@ -38,24 +37,6 @@ Category.deleteMany({})
     }
     console.log("Creating categories...");
     return Category.create(categories);
-  })
-  .catch((e) => {
-    console.log(e);
-    process.exit(1);
-  });
-
-Tag.deleteMany({})
-  .then(() => {
-    let tags = [];
-    for (let i = 0; i < 15; i++) {
-      const randomColor = Math.floor(Math.random() * 16777215).toString(16);
-      tags.push({
-        name: faker.lorem.word(),
-        color: "#" + randomColor,
-      });
-    }
-    console.log("Creating tags...");
-    return Tag.create(tags);
   })
   .catch((e) => {
     console.log(e);
