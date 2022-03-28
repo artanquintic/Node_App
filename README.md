@@ -18,19 +18,20 @@
 ### Install packages
 
 ```shell
-npm install
+$ npm install
 ```
 
 ### Seed
 
 ```shell
-node bin/seed.js
+$ node bin/seed.js
 ```
 
 ### Run app
-
 ```shell
-npm run dev
+# run on different terminals:
+$ mongod
+$ npm run dev
 ```
 
 Credentials:
